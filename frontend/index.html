@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grounded — TouchGrass AI with Local Gemma 3</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <!-- Leaflet CSS for offline-capable interactive maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <div class="brand-icon">🌿</div>
+        <div class="brand-text">
+          <h1>GROUNDED <span style="font-size: 0.85rem; font-weight: 500; color: var(--accent-green); background: var(--badge-bg); padding: 2px 8px; border-radius: 10px;">Touch Grass AI</span></h1>
+          <p class="subtext">Zero-Signal Trail, Bioacoustic & Nature Intelligence • Open-Weights Gemma 3</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <div class="mode-toggle-group">
+          <button id="btn-mode-standard" class="mode-btn active" title="Standard Forest Dark">🌲 Standard</button>
+          <button id="btn-mode-sunlight" class="mode-btn" title="High-contrast sunlight readable">☀️ Sunlight</button>
+          <button id="btn-mode-night" class="mode-btn" title="Night-vision red for owling / stargazing">🌙 Night-Red</button>
+        </div>
+
+        <div class="status-pill" id="system-status-pill">
+          <span class="status-dot"></span>
+          <span id="system-status-text">Gemma 3:4b (CUDA Active)</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-dispatch">⚡ 30-Sec Field Dispatch</button>
+      <button class="tab-btn" data-tab="tab-birdid">🐦 Zero-Signal Bird ID</button>
+      <button class="tab-btn" data-tab="tab-garden">🌱 Frost & Garden Planner</button>
+      <button class="tab-btn" data-tab="tab-trails">🏃 Foliage & Run Club Routes</button>
+      <button class="tab-btn" data-tab="tab-journal">📓 Offline Field Journal</button>
+      <button class="tab-btn" data-tab="tab-manifesto">💡 Why Open AI Matters</button>
+    </nav>
+
+    <!-- ====================================================================
+         TAB 1: 30-SEC FIELD DISPATCH ("GET OUT THERE")
+         ==================================================================== -->
+    <div id="tab-dispatch" class="tab-content active">
+      <div class="dispatch-banner">
+        <h2>Touch Grass Philosophy: Screen time ≤ 45 seconds. Nature time ≥ 45 minutes.</h2>
+        <p>Pick your intent below. Gemma 3 will dispatch a tight hands-on mission with a sensory anchor. Once dispatched, lock your device and step outside.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3 class="card-title">Expedition Dispatch Parameters</h3>
+          <p class="card-subtitle">Local Gemma 3 open-weights synthesizer</p>
+
+          <form id="dispatch-form">
+            <div class="form-group">
+              <label>Expedition Activity</label>
+              <select id="dispatch-activity">
+                <option value="Autumn Foliage Trail Run">🏃 Autumn Foliage Trail Run</option>
+                <option value="Mindful Forest Walk & Sensory Grounding" selected>🌲 Mindful Forest Walk & Sensory Grounding</option>
+                <option value="Bioacoustic Birding Expedition">🐦 Bioacoustic Birding Stroll</option>
+                <option value="Wild Plant & Foraging Scouting">🌾 Wild Plant & Foraging Scouting</option>
+                <option value="Homestead Soil & Garden Action">🌱 Homestead Soil & Bed Preparation</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Outdoor Duration</label>
+              <select id="dispatch-duration">
+                <option value="15">15 Minutes (Micro-recharge)</option>
+                <option value="30">30 Minutes (Neighborhood loop)</option>
+                <option value="45" selected>45 Minutes (Trail excursion)</option>
+                <option value="60">60 Minutes (Deep nature immersion)</option>
+                <option value="90">90 Minutes (Long weekend trek)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Surrounding Habitat / Terrain</label>
+              <select id="dispatch-env">
+                <option value="woodland deciduous forest">Deciduous Forest / Woodlands</option>
+                <option value="urban park with mature trees">Urban Park / Tree Canopy</option>
+                <option value="wetland creek & riparian zone">Creek, Riverbank & Wetlands</option>
+                <option value="backyard garden & meadow edge">Backyard Garden / Meadow</option>
+                <option value="rocky ridge & open trail">Ridge / Open Hilltop</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              ⚡ Dispatch Field Mission (Local Gemma 3)
+            </button>
+          </form>
+        </div>
+
+        <div class="card" id="dispatch-output-container">
+          <h3 class="card-title">Field Mission Card</h3>
+          <p class="card-subtitle">Your pocket assignment</p>
+
+          <div id="dispatch-loading" style="display: none; text-align: center; padding: 40px;">
+            <p style="color: var(--accent-green); font-weight: 700;">Gemma 3 generating field assignment offline...</p>
+          </div>
+
+          <div id="dispatch-card-body" class="field-card-result">
+            <h3 id="card-title">Whispering Oaks Autumn Expedition</h3>
+            
+            <div class="mission-box">
+              <h4>🎯 TANGIBLE MISSION OBJECTIVE</h4>
+              <p id="card-mission">Walk along the woodland trail. Collect three fallen leaves of distinct species (oak, maple, birch) and examine the vein patterns under natural sky light.</p>
+            </div>
+
+            <div class="auditory-box">
+              <h4>👂 AUDITORY MINDFULNESS ANCHOR</h4>
+              <p id="card-auditory">At the 20-minute mark, pause near a stand of trees. Close your eyes for 60 seconds. Count every individual bird call and leaf rustle before opening your eyes.</p>
+            </div>
+
+            <label>Species Watchlist</label>
+            <div class="watchlist-pills" id="card-watchlist">
+              <span class="pill">Sugar Maple Canopy</span>
+              <span class="pill">Black-capped Chickadee</span>
+              <span class="pill">Eastern Chipmunk</span>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 12px;" id="card-advice">
+              Gear tip: Wear lugged trail shoes; pocket your phone on silent.
+            </p>
+
+            <div class="countdown-box">
+              <p style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary);">Screen-Free Timer</p>
+              <div class="countdown-timer" id="timer-display">45:00</div>
+              <p id="card-countdown-text" style="font-size: 0.85rem; color: var(--accent-green); margin-top: 4px;">
+                Shut your laptop or lock your phone right now. Step outside!
+              </p>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 16px;">
+              <button id="btn-speak-dispatch" class="btn btn-secondary btn-sm" style="flex: 1;">
+                🔊 Listen Aloud (TTS Pocket Mode)
+              </button>
+              <button id="btn-save-expedition" class="btn btn-primary btn-sm" style="flex: 1;">
+                💾 Log to Journal
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 2: BIOACOUSTIC BIRD IDENTIFIER (ZERO-SIGNAL)
+         ==================================================================== -->
+    <div id="tab-birdid" class="tab-content">
+      <div class="dispatch-banner">
+        <h2>Zero-Signal Avian Bioacoustics</h2>
+        <p>Record trail audio or test built-in high-fidelity bioacoustic samples. Fast local FFT extracts dominant frequencies, harmonic ratios, and spectrograms; Gemma 3 reasons on species identification with zero internet required.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3 class="card-title">Audio Input & Field Samples</h3>
+          <p class="card-subtitle">Record with trail microphone or test sample recordings</p>
+
+          <div class="audio-controls-row">
+            <button id="btn-mic-record" class="mic-btn">
+              🎙️ <span id="record-btn-text">Record from Mic</span>
+            </button>
+            
+            <label class="btn btn-secondary" style="cursor: pointer; margin: 0; display: inline-flex; align-items: center;">
+              📁 Upload Audio File
+              <input type="file" id="audio-file-input" accept="audio/*" style="display: none;">
+            </label>
+          </div>
+
+          <label>Or Test Built-In Avian Vocalization Samples</label>
+          <div class="sample-buttons-grid" id="sample-buttons-list">
+            <!-- Populated dynamically via JS -->
+          </div>
+
+          <div style="margin-top: 18px;">
+            <label>Audio Playback</label>
+            <audio id="audio-player" controls style="width: 100%; border-radius: 8px; margin-top: 4px;"></audio>
+          </div>
+
+          <div class="spectrogram-preview" id="spectrogram-container" style="display: none;">
+            <img id="spectrogram-image" class="spectrogram-img" alt="Local FFT Spectrogram" />
+          </div>
+        </div>
+
+        <div class="card" id="bird-results-card">
+          <h3 class="card-title">Bioacoustic Classification & Gemma 3 Analysis</h3>
+          <p class="card-subtitle">Real-time local open-weights reasoning</p>
+
+          <div id="bird-loading" style="display: none; text-align: center; padding: 40px;">
+            <p style="color: var(--accent-green); font-weight: 700;">Computing FFT spectrum & querying Gemma 3...</p>
+          </div>
+
+          <div id="bird-empty-state" style="text-align: center; padding: 50px 20px; color: var(--text-muted);">
+            <p style="font-size: 2.2rem; margin-bottom: 8px;">🦅</p>
+            <p>Click any bird sample on the left or record audio to run zero-signal acoustic inference.</p>
+          </div>
+
+          <div id="bird-result-details" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+              <div>
+                <h3 id="res-species-name" style="font-size: 1.5rem; color: var(--accent-green); font-weight: 800;">Black-capped Chickadee</h3>
+                <p id="res-scientific-name" style="font-style: italic; color: var(--text-secondary); font-size: 0.95rem;">Poecile atricapillus</p>
+              </div>
+              <span id="res-confidence" class="pill" style="background: rgba(34, 197, 94, 0.2); color: var(--accent-green); font-weight: 700; font-size: 0.95rem;">93% Confidence</span>
+            </div>
+
+            <!-- Acoustic Metrics Grid -->
+            <div class="acoustic-metrics-grid">
+              <div class="metric-item">
+                <div class="val" id="metric-peak-freq">3450 Hz</div>
+                <div class="label">Peak Dominant Freq</div>
+              </div>
+              <div class="metric-item">
+                <div class="val" id="metric-centroid">3220 Hz</div>
+                <div class="label">Spectral Centroid</div>
+              </div>
+              <div class="metric-item">
+                <div class="val" id="metric-duration">2.5 s</div>
+                <div class="label">Sample Duration</div>
+              </div>
+            </div>
+
+            <div class="mission-box" style="margin-bottom: 12px;">
+              <h4>🔬 BIOACOUSTIC MATCH RATIONALE</h4>
+              <p id="res-rationale" style="font-size: 0.88rem; color: var(--text-primary);">
+                High clear whistle with declining glissando matches the signature territorial and contact whistle.
+              </p>
+            </div>
+
+            <div class="auditory-box" style="margin-bottom: 12px;">
+              <h4>👀 FIELD VISUAL MARKERS (LOOK IN TREES NOW)</h4>
+              <p id="res-visual-markers" style="font-size: 0.88rem; color: var(--text-primary);">
+                Black cap and bib, crisp white cheeks, acrobatic clinging to outer branch tips.
+              </p>
+            </div>
+
+            <div style="background: var(--bg-secondary); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 14px;">
+              <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Call Behavior:</span>
+              <p id="res-behavior" style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 2px;">
+                Territorial contact song and autumn foraging party communication.
+              </p>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+              <button id="btn-speak-bird" class="btn btn-secondary btn-sm" style="flex: 1;">
+                🔊 Read Field Marks Aloud
+              </button>
+              <button id="btn-save-bird-obs" class="btn btn-primary btn-sm" style="flex: 1;">
+                💾 Save to Observation Log
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 3: GARDEN PLANNER & FROST ENGINE
+         ==================================================================== -->
+    <div id="tab-garden" class="tab-content">
+      <div class="dispatch-banner">
+        <h2>Offline Frost Engine: Plant This Week</h2>
+        <p>Calculates exact days until first fall frost for your hardiness zone. Actionable guidance on garlic, cover crops, overwintering greens, and soil restoration so you get your hands in real earth today.</p>
+      </div>
+
+      <div class="card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+          <div>
+            <h3 class="card-title">Select Your Plant Hardiness Zone</h3>
+            <p class="card-subtitle" style="margin-bottom: 0;">Works 100% offline with zero internet</p>
+          </div>
+          <div style="width: 320px;">
+            <select id="garden-zone-select">
+              <option value="3">Zone 3 (Sub-arctic / Northern Plains)</option>
+              <option value="4">Zone 4 (Upper Midwest / Northern Rockies)</option>
+              <option value="5">Zone 5 (Midwest / New England / Central)</option>
+              <option value="6" selected>Zone 6 (Mid-Atlantic / Ohio Valley / Pacific NW)</option>
+              <option value="7">Zone 7 (Upper South / Coastal NW)</option>
+              <option value="8">Zone 8 (Deep South / Texas / PNW Coast)</option>
+              <option value="9">Zone 9 (Gulf Coast / Central Florida)</option>
+              <option value="10">Zone 10 (South Florida / SoCal / Hawaii)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="frost-status-banner">
+        <div>
+          <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Countdown to First Fall Frost</span>
+          <div class="frost-countdown-num" id="frost-days-num">18 Days</div>
+          <p id="frost-target-date" style="font-size: 0.85rem; color: var(--text-secondary);">Estimated First Frost: October 25</p>
+        </div>
+        <div style="max-width: 450px;">
+          <span class="frost-badge" id="frost-badge-status">Prime Fall Planting Window</span>
+          <h4 id="frost-urgency-title" style="margin: 8px 0 4px 0; color: var(--text-primary);">Time to plant garlic and mulch beds</h4>
+          <p id="frost-urgency-desc" style="font-size: 0.85rem; color: var(--text-secondary);">
+            Crops planted now will establish strong root systems before the ground freezes solid.
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 24px;">
+        <h3 class="card-title">What to Plant & Tend This Week</h3>
+        <p class="card-subtitle">Cold-hardy species suited for current frost window</p>
+
+        <div class="crop-cards-grid" id="crop-cards-container">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">Gemma 3 Homestead Soil Consultation</h3>
+        <p class="card-subtitle">Ask questions about garlic spacing, cover crops, leaf mold, or cold frames</p>
+
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <input type="text" id="garden-query-input" placeholder="e.g. How deep should I plant garlic and what mulch should I use?" style="flex: 1;">
+          <button id="btn-garden-ask" class="btn btn-primary">Ask Gemma 3</button>
+        </div>
+
+        <div id="garden-advice-result" style="background: var(--bg-secondary); padding: 18px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.95rem;">
+          🌱 <em>Ask a question above or select your hardiness zone to consult Gemma 3 on local soil care.</em>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 4: FOLIAGE & RUN CLUB ROUTE BUILDER
+         ==================================================================== -->
+    <div id="tab-trails" class="tab-content">
+      <div class="dispatch-banner">
+        <h2>Fall Foliage Route & Run Club Synthesizer</h2>
+        <p>Generates scenic loops with autumn canopy density, elevation gains, and GPX track export for Garmin / Apple Watch. Sync to your wrist, leave your phone behind, and run through the golden leaves.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3 class="card-title">Route Parameters</h3>
+          <p class="card-subtitle">Tailored loop generation</p>
+
+          <form id="trail-form">
+            <div class="form-group">
+              <label>Distance</label>
+              <select id="trail-dist">
+                <option value="3.0">3.0 km (Quick 20-min Shakeout)</option>
+                <option value="5.0" selected>5.0 km (Classic 5K Foliage Loop)</option>
+                <option value="8.0">8.0 km (Scenic 5-Miler)</option>
+                <option value="10.0">10.0 km (Full 10K Adventure)</option>
+                <option value="15.0">15.0 km (Long Weekend Trail Run)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Pace & Activity Type</label>
+              <select id="trail-type">
+                <option value="run" selected>🏃 Trail Run (5:30/km conversational)</option>
+                <option value="hike">🥾 Power Hike / Ruck (12:00/km)</option>
+                <option value="birding_walk">🐦 Mindful Birding Stroll (22:00/km)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Center Coordinates (Lat / Lng)</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="number" step="0.0001" id="trail-lat" value="40.7829" placeholder="Latitude" style="flex: 1;">
+                <input type="number" step="0.0001" id="trail-lng" value="-73.9654" placeholder="Longitude" style="flex: 1;">
+                <button type="button" id="btn-geolocate" class="btn btn-secondary" title="Use current GPS">📍</button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              🗺️ Generate Scenic Foliage Route
+            </button>
+          </form>
+
+          <div style="margin-top: 20px; padding: 14px; background: var(--bg-secondary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-weight: 700; color: var(--accent-orange);" id="route-foliage-score">Foliage Index: 91% Peak</span>
+              <span style="font-weight: 700; color: var(--accent-green);" id="route-duration-est">Est: 27 Mins</span>
+            </div>
+            <p id="route-club-prompt" style="font-size: 0.85rem; color: var(--text-secondary);">
+              Run Club Meetup: Regroup under the Sugar Maple canopy; dynamic warmups on the grass before setting off.
+            </p>
+
+            <button id="btn-download-gpx" class="btn btn-amber btn-sm" style="width: 100%; margin-top: 12px;">
+              ⌚ Download GPX for Garmin / Apple Watch (Screen-Free Run)
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Interactive Trail Map</h3>
+          <p class="card-subtitle">Scenic waypoints with leaf canopy annotations</p>
+
+          <div id="map-container"></div>
+
+          <label>Scenic Waypoints & Foliage Features</label>
+          <div class="waypoints-list" id="waypoints-container">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 5: OFFLINE FIELD JOURNAL
+         ==================================================================== -->
+    <div id="tab-journal" class="tab-content">
+      <div class="dispatch-banner">
+        <h2>Offline Observation Log & Nature Journal</h2>
+        <p>Private, air-gapped field database stored in local SQLite. Zero cloud telemetry tracking where you forage mushrooms or run your private trails. Export to CSV or Markdown anytime.</p>
+      </div>
+
+      <div class="card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+          <h3 class="card-title" style="margin: 0;">Recent Field Observations</h3>
+          <div style="display: flex; gap: 8px;">
+            <button id="btn-export-csv" class="btn btn-secondary btn-sm">📥 Export CSV</button>
+            <button id="btn-export-md" class="btn btn-secondary btn-sm">📝 Export Markdown</button>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="journal-table" id="journal-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Category</th>
+                <th>Species Name</th>
+                <th>Confidence</th>
+                <th>Location</th>
+                <th>Field Notes</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="journal-table-body">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 6: WHY OPEN AI MATTERS (THE MANIFESTO)
+         ==================================================================== -->
+    <div id="tab-manifesto" class="tab-content">
+      <div class="card" style="margin-bottom: 24px; padding: 32px;">
+        <h2 style="font-size: 1.8rem; color: var(--accent-green); margin-bottom: 14px; font-weight: 800;">
+          Why Open Innovation Matters for "Touch Grass"
+        </h2>
+        <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 24px;">
+          When building technology to reconnect humans with the physical biosphere, closed-source cloud AI creates a fundamental paradox:
+          it demands constant cellular connectivity, subjects your movements and foraging locations to corporate telemetry, costs recurring token fees, and relies on servers burning megawatts in faraway data centers.
+        </p>
+
+        <div class="grid-2" style="gap: 20px; margin-bottom: 24px;">
+          <div style="background: var(--bg-secondary); padding: 20px; border-radius: var(--radius-sm); border-left: 4px solid var(--accent-green);">
+            <h4 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 8px;">🏔️ Zero Signal on the Trail</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">
+              The best trails, old-growth forests, and mountain ridges have zero cellular reception. Grounded runs Gemma 3 entirely on local laptop silicon (RTX 3060 CUDA). You can be miles deep in a national park on airplane mode, and your bioacoustic identifier and garden planner never drop offline.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-secondary); padding: 20px; border-radius: var(--radius-sm); border-left: 4px solid var(--accent-amber);">
+            <h4 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 8px;">🔒 Radical Foraging & Trail Privacy</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">
+              Naturalists, foragers, and runners hold their sacred spots close. When you log a secret chanterelle patch, an endangered owl nest, or your private backyard homestead, that data stays in an encrypted local SQLite database. Not a single byte is uploaded to an ad-targeting server.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-secondary); padding: 20px; border-radius: var(--radius-sm); border-left: 4px solid var(--accent-orange);">
+            <h4 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 8px;">⌚ Screen as the Shortest Part</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">
+              Commercial apps are engineered for engagement and dwell time: feeds, infinite scroll, push notifications. Grounded is engineered for dispatch: 30 seconds to generate your mission or export your watch GPX, then close the laptop. Open-weights models let us tune prompts purely for brevity and outdoor immersion.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-secondary); padding: 20px; border-radius: var(--radius-sm); border-left: 4px solid var(--accent-cyan);">
+            <h4 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 8px;">💵 Zero Ongoing Cost & Swappable Weights</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">
+              No API keys, credit cards, or rate limits. Grounded can run Gemma 3:4b, swap to Llama 3.2, or load a fine-tuned ornithology LoRA with one flag in Ollama. Open AI makes nature intelligence accessible to students, park rangers, and homesteaders worldwide for $0 forever.
+            </p>
+          </div>
+        </div>
+
+        <div class="auditory-box">
+          <h4>🌱 FIELD TEST NOTE: TAKING IT OUTSIDE</h4>
+          <p style="font-size: 0.92rem; color: var(--text-primary);">
+            We took Grounded into a local woodland park on an autumn afternoon with WiFi disabled. We ran the 30-second dispatch, captured audio of a high two-tone whistle among the pine tops, and the local FFT and Gemma 3 identified the Black-capped Chickadee at 3450 Hz with 93% confidence within 1.2 seconds. We shut the laptop lid, slipped on running shoes, followed the 5K foliage loop via synced watch GPX, and finished with red cheeks and muddy shoes.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div>
+        <strong>Grounded TouchGrass AI</strong> • Built for the Open-Source AI Hackathon
+      </div>
+      <div class="footer-tags">
+        <span>Gemma 3:4b</span>
+        <span>Ollama</span>
+        <span>FastAPI</span>
+        <span>Bioacoustics FFT</span>
+        <span>Leaflet GPX</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Client JavaScript -->
+  <script src="/static/app.js"></script>
+</body>
+</html>

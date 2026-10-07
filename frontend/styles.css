@@ -1,0 +1,739 @@
+/* ==========================================================================
+   GROUNDED: TouchGrass AI - Open-Source Outdoor Companion
+   Styles & Ergonomics (Standard Earth, Sunlight Mode, Night-Vision Red)
+   ========================================================================== */
+
+:root {
+  --bg-primary: #0b110d;
+  --bg-secondary: #121c15;
+  --bg-card: #18251d;
+  --bg-card-hover: #1e2f25;
+  --border-color: #273e2f;
+  --text-primary: #f0fdf4;
+  --text-secondary: #a7c4b0;
+  --text-muted: #6b8f75;
+  
+  --accent-green: #22c55e;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-orange: #f97316;
+  --accent-cyan: #06b6d4;
+
+  --badge-bg: rgba(34, 197, 94, 0.15);
+  --badge-border: rgba(34, 197, 94, 0.3);
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   OUTDOOR ERGONOMIC MODES
+   ========================================================================== */
+
+/* 1. Sunlight Mode: Ultra-high contrast for direct outdoor sun */
+body.sunlight-mode {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f4f4f5;
+  --bg-card: #ffffff;
+  --bg-card-hover: #e4e4e7;
+  --border-color: #000000;
+  --text-primary: #000000;
+  --text-secondary: #18181b;
+  --text-muted: #3f3f46;
+  --accent-green: #007a33;
+  --accent-emerald: #006622;
+  --accent-amber: #b45309;
+  --accent-orange: #c2410c;
+  --badge-bg: #e4e4e7;
+  --badge-border: #000000;
+  --shadow-card: 0 0 0 2px #000000;
+  font-weight: 600;
+}
+
+body.sunlight-mode .card,
+body.sunlight-mode button,
+body.sunlight-mode select,
+body.sunlight-mode input {
+  border-width: 2px !important;
+  border-color: #000000 !important;
+  color: #000000 !important;
+}
+
+/* 2. Night-Vision Red Mode: Deep crimson on black for owling / stargazing */
+body.night-mode {
+  --bg-primary: #050000;
+  --bg-secondary: #0f0202;
+  --bg-card: #170404;
+  --bg-card-hover: #220606;
+  --border-color: #4a0c0c;
+  --text-primary: #ff4d4d;
+  --text-secondary: #b83232;
+  --text-muted: #801a1a;
+  --accent-green: #e61919;
+  --accent-emerald: #cc1414;
+  --accent-amber: #ff6633;
+  --accent-orange: #ff3300;
+  --badge-bg: rgba(230, 25, 25, 0.2);
+  --badge-border: rgba(230, 25, 25, 0.5);
+  --shadow-card: 0 4px 20px rgba(74, 12, 12, 0.3);
+}
+
+/* ==========================================================================
+   BASE & LAYOUT
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.app-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 24px 20px 80px 20px;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-icon {
+  font-size: 2.4rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 6px 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.brand-text h1 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-text .subtext {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mode-toggle-group {
+  display: flex;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  gap: 2px;
+}
+
+.mode-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-weight: 600;
+}
+
+.mode-btn.active {
+  background: var(--accent-green);
+  color: #000;
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--badge-bg);
+  border: 1px solid var(--badge-border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-green);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-green);
+}
+
+/* ==========================================================================
+   NAVIGATION TABS
+   ========================================================================== */
+
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 28px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.tab-btn {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+  color: var(--text-secondary);
+  padding: 10px 18px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.tab-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  background: var(--bg-card);
+  color: var(--accent-green);
+  border-color: var(--accent-green) var(--accent-green) var(--bg-card);
+  border-top-width: 2px;
+}
+
+/* Tab Panels */
+.tab-content {
+  display: none;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   CARDS & GRID LAYOUT
+   ========================================================================== */
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 880px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+/* Forms & Inputs */
+.form-group {
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+input, select, textarea {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent-green);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+}
+
+.btn-primary {
+  background: var(--accent-green);
+  color: #0b110d;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--text-muted);
+}
+
+.btn-amber {
+  background: var(--accent-amber);
+  color: #000;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.82rem;
+}
+
+/* ==========================================================================
+   TAB 1: QUICK DISPATCH
+   ========================================================================== */
+
+.dispatch-banner {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(245, 158, 11, 0.08));
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.dispatch-banner h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--accent-green);
+}
+
+.field-card-result {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-green);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-top: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.field-card-result h3 {
+  font-size: 1.35rem;
+  margin-bottom: 12px;
+  color: var(--accent-green);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mission-box {
+  background: rgba(34, 197, 94, 0.08);
+  border-left: 4px solid var(--accent-green);
+  padding: 14px 18px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-bottom: 16px;
+}
+
+.mission-box h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-emerald);
+  margin-bottom: 4px;
+}
+
+.auditory-box {
+  background: rgba(245, 158, 11, 0.08);
+  border-left: 4px solid var(--accent-amber);
+  padding: 14px 18px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-bottom: 16px;
+}
+
+.auditory-box h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-amber);
+  margin-bottom: 4px;
+}
+
+.watchlist-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.pill {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.countdown-box {
+  text-align: center;
+  padding: 16px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  margin-top: 18px;
+  border: 1px dashed var(--accent-green);
+}
+
+.countdown-timer {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--accent-green);
+}
+
+/* ==========================================================================
+   TAB 2: BIOACOUSTIC BIRD IDENTIFIER
+   ========================================================================== */
+
+.audio-controls-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.mic-btn {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mic-btn.recording {
+  animation: pulseRed 1s infinite alternate;
+}
+
+@keyframes pulseRed {
+  from { background: #dc2626; box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+  to { background: #991b1b; box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+}
+
+.sample-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.sample-chip {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.sample-chip:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-green);
+}
+
+.sample-chip .title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.sample-chip .sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.spectrogram-preview {
+  margin-top: 16px;
+  background: #0f172a;
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.spectrogram-img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.acoustic-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.metric-item {
+  background: var(--bg-secondary);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.metric-item .val {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--accent-amber);
+}
+
+.metric-item .label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   TAB 3: GARDEN PLANNER & FROST ENGINE
+   ========================================================================== */
+
+.frost-status-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.frost-countdown-num {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--accent-amber);
+  line-height: 1;
+}
+
+.frost-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-amber);
+}
+
+.crop-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.crop-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.crop-card h4 {
+  font-size: 1.05rem;
+  color: var(--accent-emerald);
+  margin-bottom: 6px;
+}
+
+.crop-card .category {
+  font-size: 0.75rem;
+  color: var(--accent-amber);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.crop-card p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+/* ==========================================================================
+   TAB 4: TRAIL & RUN CLUB ROUTE BUILDER
+   ========================================================================== */
+
+#map-container {
+  height: 440px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  margin-bottom: 16px;
+  z-index: 1;
+}
+
+.waypoints-list {
+  max-height: 280px;
+  overflow-y: auto;
+  margin-top: 12px;
+}
+
+.waypoint-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.88rem;
+}
+
+.waypoint-item:last-child {
+  border-bottom: none;
+}
+
+.foliage-badge {
+  background: rgba(249, 115, 22, 0.15);
+  color: var(--accent-orange);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   TAB 5: FIELD JOURNAL & OBSERVATIONS
+   ========================================================================== */
+
+.journal-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+}
+
+.journal-table th, .journal-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.88rem;
+}
+
+.journal-table th {
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* ==========================================================================
+   FOOTER & MODAL
+   ========================================================================== */
+
+footer {
+  margin-top: 50px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.footer-tags {
+  display: flex;
+  gap: 12px;
+}
